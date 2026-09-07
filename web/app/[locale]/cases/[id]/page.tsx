@@ -1,87 +1,71 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Disclaimer } from "@/components/ui/disclaimer";
+import { AppShell } from "@/components/app-shell";
+import { CaseWorkspace } from "./_workspace";
 import { createClient } from "@/lib/supabase/server";
+import { EVIDENCE_CATEGORIES } from "@/lib/constants";
 import type { Locale } from "@/i18n/routing";
-
-const TABS = [
-  "overview",
-  "evidence",
-  "timeline",
-  "expenses",
-  "requests",
-  "verification",
-  "export",
-] as const;
 
 export default async function CaseDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
   const { locale, id } = await params;
+  const { tab } = await searchParams;
   setRequestLocale(locale as Locale);
-  const t = await getTranslations();
+  const t = await getTranslations("case");
   const supabase = await createClient();
   const { data: c } = await supabase
     .from("cases")
-    .select("id,title,jurisdiction,status,description,created_at")
+    .select("id,title,jurisdiction,status,description,created_at,updated_at")
     .eq("id", id)
     .single();
   if (!c) notFound();
 
+  const [evidence, timeline, expenses, requests] = await Promise.all([
+    supabase
+      .from("evidence_files")
+      .select("id,original_filename,mime_type,file_size_bytes,sha256_hash,category,created_at,encryption_version")
+      .eq("case_id", id)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .limit(60),
+    supabase
+      .from("timeline_events")
+      .select("id,event_date,title,description,classification,created_at")
+      .eq("case_id", id)
+      .order("event_date", { ascending: false, nullsFirst: false })
+      .limit(60),
+    supabase
+      .from("expense_records")
+      .select("id,expense_date,amount,currency,claimed_purpose,status,payee,created_at")
+      .eq("case_id", id)
+      .order("expense_date", { ascending: false, nullsFirst: false })
+      .limit(60),
+    supabase
+      .from("document_requests")
+      .select("id,request_type,factual_summary,status,created_at")
+      .eq("case_id", id)
+      .order("created_at", { ascending: false })
+      .limit(60),
+  ]);
+
   return (
-    <main className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{c.title}</h1>
-        <Badge tone="system_extraction">
-          {c.jurisdiction} · {c.status}
-        </Badge>
-      </div>
-
-      <nav className="flex flex-wrap gap-2 text-sm">
-        {TABS.map((tab) => (
-          <Link
-            key={tab}
-            href={`#${tab}`}
-            className="rounded-full border border-zinc-300 px-3 py-1 hover:bg-zinc-100"
-          >
-            {tab}
-          </Link>
-        ))}
-      </nav>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-zinc-600">
-          {c.description ?? "—"}
-        </CardContent>
-      </Card>
-
-      {(
-        [
-          ["evidence", "Build 02: encrypted upload + hash + activity history."],
-          ["timeline", "Build 03: chronological record with fact/allegation badges."],
-          ["expenses", "Build 03: reconciliation ledger."],
-          ["requests", "Build 04: neutral correspondence drafts."],
-          ["verification", "Build 05: official-channel guides."],
-          ["export", "Build 04: PDF + evidence archive + review package."],
-        ] as const
-      ).map(([tab, body]) => (
-        <Card key={tab} id={tab}>
-          <CardHeader>
-            <CardTitle className="capitalize">{tab}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-zinc-500">{body}</CardContent>
-        </Card>
-      ))}
-
-      <Disclaimer>{t("disclaimers.aiAnalysis")}</Disclaimer>
-    </main>
+    <AppShell variant="case">
+      <CaseWorkspace
+        locale={locale}
+        activeTab={tab ?? "overview"}
+        caseRow={c}
+        evidence={evidence.data ?? []}
+        timeline={timeline.data ?? []}
+        expenses={expenses.data ?? []}
+        requests={requests.data ?? []}
+        categories={EVIDENCE_CATEGORIES as readonly string[]}
+      />
+    </AppShell>
   );
 }

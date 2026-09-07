@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Disclaimer } from "@/components/ui/disclaimer";
+import { AppShell } from "@/components/app-shell";
+import { DashboardClient } from "./_client";
 import { createClient } from "@/lib/supabase/server";
+import { JURISDICTIONS, type Jurisdiction } from "@/lib/constants";
 import type { Locale } from "@/i18n/routing";
 
 export default async function DashboardPage({
@@ -12,81 +12,60 @@ export default async function DashboardPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const t = await getTranslations();
+  const t = await getTranslations("dashboard");
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let cases: { id: string; title: string; jurisdiction: string; status: string }[] = [];
-  if (user) {
-    const { data } = await supabase
-      .from("cases")
-      .select("id,title,jurisdiction,status")
-      .order("updated_at", { ascending: false })
-      .limit(20);
-    cases = data ?? [];
+  if (!user) {
+    return (
+      <AppShell>
+        <div className="grid min-h-[60vh] place-items-center text-center">
+          <div className="max-w-sm">
+            <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+            <p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
+          </div>
+        </div>
+      </AppShell>
+    );
   }
 
+  const { data: cases } = await supabase
+    .from("cases")
+    .select("id,title,jurisdiction,status,updated_at,created_at")
+    .order("updated_at", { ascending: false });
+
+  const { count: evidenceCount } = await supabase
+    .from("evidence_files")
+    .select("id", { count: "exact", head: true });
+
+  const { count: requestCount } = await supabase
+    .from("document_requests")
+    .select("id", { count: "exact", head: true });
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("default_jurisdiction")
+    .eq("id", user.id)
+    .single();
+
+  const defaultJurisdiction: Jurisdiction | null =
+    profile?.default_jurisdiction && JURISDICTIONS.includes(profile.default_jurisdiction as Jurisdiction)
+      ? (profile.default_jurisdiction as Jurisdiction)
+      : null;
+
   return (
-    <main className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t("dashboard.title")}</h1>
-        <Link href={`/${locale}/cases/new`} className="text-sm underline">
-          {t("case.new")}
-        </Link>
-      </div>
-
-      {!user && (
-        <Disclaimer>
-          <Link href={`/${locale}/login`} className="underline">
-            {t("nav.signIn")}
-          </Link>
-        </Disclaimer>
-      )}
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("dashboard.activeCases")}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">{cases.length}</CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>0 {t("dashboard.needsVerification")}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-zinc-500">
-            Timeline + expense checks appear here (Build 03).
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>0 {t("dashboard.pendingRequests")}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-zinc-500">
-            Document requests appear here (Build 04).
-          </CardContent>
-        </Card>
-      </div>
-
-      <section className="flex flex-col gap-2">
-        {cases.map((c) => (
-          <Link key={c.id} href={`/${locale}/cases/${c.id}`}>
-            <Card>
-              <CardContent className="flex items-center justify-between pt-4">
-                <span className="font-medium">{c.title}</span>
-                <span className="text-xs text-zinc-500">
-                  {c.jurisdiction} · {c.status}
-                </span>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-        {user && cases.length === 0 && (
-          <p className="text-sm text-zinc-500">No cases yet.</p>
-        )}
-      </section>
-    </main>
+    <AppShell>
+      <DashboardClient
+        locale={locale}
+        email={user.email ?? ""}
+        fullName={(user.user_metadata?.full_name as string) ?? null}
+        cases={cases ?? []}
+        evidenceCount={evidenceCount ?? 0}
+        requestCount={requestCount ?? 0}
+        defaultJurisdiction={defaultJurisdiction}
+      />
+    </AppShell>
   );
 }

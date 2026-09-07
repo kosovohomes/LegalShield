@@ -1,26 +1,30 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** Classification badge — facts and allegations must be visually distinct (§48). */
-const colors: Record<string, string> = {
-  user_fact: "bg-emerald-100 text-emerald-900",
-  user_allegation: "bg-amber-100 text-amber-900",
-  document_observation: "bg-sky-100 text-sky-900",
-  system_extraction: "bg-zinc-100 text-zinc-900",
-  ai_observation: "bg-violet-100 text-violet-900",
-  professional_opinion: "bg-blue-100 text-blue-900",
+/** Tone names map to --flag-* tokens defined in globals.css. */
+const TONES: Record<string, string> = {
+  user_fact: "bg-[hsl(var(--flag-verified)/0.18)] text-[hsl(var(--flag-verified))] ring-[hsl(var(--flag-verified)/0.35)]",
+  user_allegation: "bg-[hsl(var(--flag-allegation)/0.18)] text-[hsl(var(--flag-allegation))] ring-[hsl(var(--flag-allegation)/0.35)]",
+  document_observation: "bg-[hsl(var(--flag-observation)/0.18)] text-[hsl(var(--flag-observation))] ring-[hsl(var(--flag-observation)/0.35)]",
+  system_extraction: "bg-muted text-foreground ring-border",
+  ai_observation: "bg-[hsl(var(--flag-ai)/0.18)] text-[hsl(var(--flag-ai))] ring-[hsl(var(--flag-ai)/0.35)]",
+  professional_opinion: "bg-[hsl(var(--flag-professional)/0.18)] text-[hsl(var(--flag-professional))] ring-[hsl(var(--flag-professional)/0.35)]",
+  conflict: "bg-[hsl(var(--flag-conflict)/0.18)] text-[hsl(var(--flag-conflict))] ring-[hsl(var(--flag-conflict)/0.35)]",
+  verified: "bg-[hsl(var(--flag-verified)/0.18)] text-[hsl(var(--flag-verified))] ring-[hsl(var(--flag-verified)/0.35)]",
+  warning: "bg-[hsl(var(--flag-allegation)/0.18)] text-[hsl(var(--flag-allegation))] ring-[hsl(var(--flag-allegation)/0.35)]",
+  neutral: "bg-muted text-muted-foreground ring-border",
 };
 
 export function Badge({
   className,
-  tone,
+  tone = "neutral",
   ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { tone?: string }) {
+}: React.HTMLAttributes<HTMLSpanElement> & { tone?: keyof typeof TONES }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        tone && colors[tone] ? colors[tone] : "bg-zinc-100 text-zinc-900",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1 ring-inset",
+        TONES[tone] ?? TONES.neutral,
         className,
       )}
       {...props}

@@ -1,8 +1,11 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, Input } from "@/components/ui/field";
 import { createClient } from "@/lib/supabase/server";
+import { AuthShell } from "@/components/auth-shell";
+import { IconArrowRight } from "@/components/ui/icons";
 import type { Locale } from "@/i18n/routing";
 
 const KNOWN_ERRORS = new Set(["invalid", "rate_limit", "not_confirmed", "failed"]);
@@ -16,7 +19,7 @@ export default async function LoginPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const t = await getTranslations();
+  const t = await getTranslations("auth");
   const sp = await searchParams;
   const errorKey = sp.error && KNOWN_ERRORS.has(sp.error) ? sp.error : null;
   const showCheckEmail = sp.notice === "check_email";
@@ -38,62 +41,51 @@ export default async function LoginPage({
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) redirect(`login?error=${toErrorCode(error.message)}`);
-    // "Confirm email" ON => no session until the user clicks the email link.
     if (!data.session) redirect("login?notice=check_email");
     redirect("dashboard");
   }
 
+  const alert = errorKey
+    ? ({ tone: "error", message: t(`errors.${errorKey}`) } as const)
+    : showCheckEmail
+    ? ({ tone: "success", message: t("checkEmail") } as const)
+    : null;
+
   return (
-    <main className="mx-auto max-w-md px-6 py-10">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("nav.signIn")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="flex flex-col gap-4">
-            {errorKey && (
-              <p role="alert" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-900">
-                {t(`auth.errors.${errorKey}`)}
-              </p>
-            )}
-            {showCheckEmail && (
-              <p role="status" className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
-                {t("auth.checkEmail")}
-              </p>
-            )}
-            <label className="flex flex-col gap-1 text-sm">
-              Email
-              <input
-                name="email"
-                type="email"
-                required
-                className="rounded-md border border-zinc-300 px-3 py-2"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm">
-              Password
-              <input
-                name="password"
-                type="password"
-                required
-                minLength={8}
-                className="rounded-md border border-zinc-300 px-3 py-2"
-              />
-            </label>
-            <div className="flex gap-2">
-              <Button formAction={signIn}>{t("nav.signIn")}</Button>
-              <Button variant="outline" formAction={signUp}>
-                {t("auth.createAccount")}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </main>
+    <AuthShell title={t("title")} subtitle={t("subtitle")} alert={alert}>
+      <form className="flex flex-col gap-4">
+        <Field label={t("email")}>
+          <Input name="email" type="email" required autoComplete="email" />
+        </Field>
+        <Field label={t("password")}>
+          <Input
+            name="password"
+            type="password"
+            required
+            minLength={8}
+            autoComplete="current-password"
+          />
+        </Field>
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <Button formAction={signIn} className="gap-1.5">
+            {t("title")}
+            <IconArrowRight size={14} className="rtl:rotate-180" />
+          </Button>
+          <Button formAction={signUp} variant="outline" className="gap-1.5">
+            {t("createAccount")}
+          </Button>
+        </div>
+        <Link
+          href={`/${locale}/forgot-password`}
+          className="mt-1 text-end text-xs text-muted-foreground hover:text-foreground"
+        >
+          {t("forgotTitle")}
+        </Link>
+      </form>
+    </AuthShell>
   );
 }
 
-/** Map Supabase messages to stable, translatable codes (never leak raw errors). */
 function toErrorCode(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("invalid") && m.includes("email")) return "invalid";
