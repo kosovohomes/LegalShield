@@ -234,3 +234,83 @@ export function IconAlert({ size = 18, className, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function IconScale({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M12 2v20" />
+      <path d="M7 6h10" />
+      <path d="M7 3.5H5l4 7a3 3 0 0 0 6 0l4-7h-2" />
+      <path d="M5 21h14" />
+    </svg>
+  );
+}
+
+export function IconBriefcase({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <path d="M12 12v2" />
+    </svg>
+  );
+}
+
+export function IconHome({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M9 21V13h6v8" />
+    </svg>
+  );
+}
+
+export function IconCar({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M4 15 5.5 8a2 2 0 0 1 2-1.5h9A2 2 0 0 1 18.5 8L20 15" />
+      <rect x="3" y="15" width="18" height="4" rx="1" />
+      <circle cx="7" cy="18" r="1" />
+      <circle cx="17" cy="18" r="1" />
+    </svg>
+  );
+}
+
+export function IconHeart({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9Z" />
+    </svg>
+  );
+}
+
+export function IconTag({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M3 12 12 3h7v7l-9 9z" />
+      <circle cx="16" cy="8" r="1.2" />
+    </svg>
+  );
+}
+
+export function IconHash({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
+    </svg>
+  );
+}
+
+export function IconFingerprint({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M12 3a9 9 0 0 1 9 9" />
+      <path d="M12 7a5 5 0 0 1 5 5" />
+      <path d="M12 11a1 1 0 0 1 1 1" />
+      <path d="M7 6.5a9 9 0 0 0-4 7.5" />
+      <path d="M7 12a5 5 0 0 0 5 5" />
+      <path d="M12 17a9 9 0 0 0 9 9" />
+      <path d="M3 15a6.5 6.5 0 0 0 13 0" />
+    </svg>
+  );
+}

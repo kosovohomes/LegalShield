@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { AppShell } from "@/components/app-shell";
 import { CaseWorkspace } from "./_workspace";
 import { createClient } from "@/lib/supabase/server";
@@ -17,7 +16,6 @@ export default async function CaseDetailPage({
   const { locale, id } = await params;
   const { tab } = await searchParams;
   setRequestLocale(locale as Locale);
-  const t = await getTranslations("case");
   const supabase = await createClient();
   const { data: c } = await supabase
     .from("cases")
@@ -29,7 +27,7 @@ export default async function CaseDetailPage({
   const [evidence, timeline, expenses, requests] = await Promise.all([
     supabase
       .from("evidence_files")
-      .select("id,original_filename,mime_type,file_size_bytes,sha256_hash,category,created_at,encryption_version")
+      .select("id,original_filename,mime_type,file_size_bytes,sha256_hash,category,description,document_date,created_at,encryption_version")
       .eq("case_id", id)
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
@@ -54,14 +52,36 @@ export default async function CaseDetailPage({
       .limit(60),
   ]);
 
+  const evidenceRows = evidence.data ?? [];
+  const manualRows = timeline.data ?? [];
+
+  const evidenceTimeline = evidenceRows
+    .filter((e) => e.document_date)
+    .map((e) => ({
+      id: `ev-${e.id}`,
+      event_date: e.document_date,
+      title: e.original_filename,
+      description: null,
+      classification: "document_observation",
+      source_evidence_id: e.id,
+      created_at: e.created_at,
+    }));
+
+  const mergedTimeline = [...manualRows, ...evidenceTimeline].sort(
+    (a, b) =>
+      new Date(b.event_date ?? b.created_at).getTime() -
+      new Date(a.event_date ?? a.created_at).getTime(),
+  );
+
   return (
     <AppShell variant="case">
       <CaseWorkspace
         locale={locale}
         activeTab={tab ?? "overview"}
+        caseId={id}
         caseRow={c}
-        evidence={evidence.data ?? []}
-        timeline={timeline.data ?? []}
+        evidence={evidenceRows}
+        timeline={mergedTimeline}
         expenses={expenses.data ?? []}
         requests={requests.data ?? []}
         categories={EVIDENCE_CATEGORIES as readonly string[]}

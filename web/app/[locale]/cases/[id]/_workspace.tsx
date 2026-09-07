@@ -19,7 +19,6 @@ import {
   IconCompass,
   IconBook,
   IconDownload,
-  IconUpload,
   IconPlus,
   IconCheck,
   IconLock,
@@ -27,6 +26,9 @@ import {
 } from "@/components/ui/icons";
 import { formatRelative } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { EvidenceUpload } from "@/components/evidence-upload";
+import { toast } from "sonner";
+import { addTimelineEvent } from "./actions";
 
 type CaseRow = {
   id: string;
@@ -51,6 +53,7 @@ const TABS = [
 export function CaseWorkspace({
   locale,
   activeTab,
+  caseId,
   caseRow,
   evidence,
   timeline,
@@ -60,6 +63,7 @@ export function CaseWorkspace({
 }: {
   locale: string;
   activeTab: string;
+  caseId: string;
   caseRow: CaseRow;
   evidence: any[];
   timeline: any[];
@@ -153,9 +157,9 @@ export function CaseWorkspace({
             <OverviewPane caseRow={caseRow} stats={stats} evidence={evidence} />
           )}
           {activeTab === "evidence" && (
-            <EvidencePane locale={locale} items={evidence} categories={categories} />
+            <EvidencePane locale={locale} caseId={caseId} items={evidence} categories={categories} />
           )}
-          {activeTab === "timeline" && <TimelinePane items={timeline} />}
+          {activeTab === "timeline" && <TimelinePane caseId={caseId} items={timeline} />}
           {activeTab === "expenses" && <ExpensesPane items={expenses} />}
           {activeTab === "requests" && <RequestsPane items={requests} />}
           {activeTab === "verification" && <VerificationPane />}
@@ -249,46 +253,23 @@ function OverviewPane({ caseRow, stats, evidence }: { caseRow: CaseRow; stats: a
 
 function EvidencePane({
   locale,
+  caseId,
   items,
   categories,
 }: {
   locale: string;
+  caseId: string;
   items: any[];
   categories: readonly string[];
 }) {
   const t = useTranslations("case");
-  const [drag, setDrag] = React.useState(false);
   return (
     <div className="flex flex-col gap-4">
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDrag(true);
-        }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDrag(false);
-        }}
-        className={cn(
-          "rounded-2xl border-2 border-dashed bg-card/40 p-10 text-center transition-colors",
-          drag ? "border-primary bg-primary/5" : "border-border/60",
-        )}
-      >
-        <div className="mx-auto grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20">
-          <IconUpload size={20} />
-        </div>
-        <h3 className="mt-4 text-base font-semibold">{t("evidence.drop")}</h3>
-        <p className="text-sm text-muted-foreground">
-          {t("evidence.or")}{" "}
-          <button className="text-primary underline-offset-4 hover:underline">
-            {t("evidence.browse")}
-          </button>
-        </p>
-        <Disclaimer tone="info" className="mt-4 text-start">
-          Files are hashed (SHA-256), encrypted with AES-256-GCM on your device, and uploaded. Originals are never modified.
-        </Disclaimer>
-      </div>
+      <EvidenceUpload caseId={caseId} categories={categories} />
+
+      <Disclaimer tone="info" className="text-start">
+        {t("evidence.securityNote")}
+      </Disclaimer>
 
       {items.length === 0 ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">
@@ -300,25 +281,40 @@ function EvidencePane({
             <li key={e.id}>
               <Card className="flex items-center justify-between p-4">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
                     <IconFile size={14} />
                   </span>
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium">{e.original_filename}</div>
                     <div className="truncate text-xs text-muted-foreground">
-                      {e.category} · {e.mime_type ?? "—"} · {(e.file_size_bytes / 1024).toFixed(1)} KB
+                      {t(`evidence.categories.${e.category}`)}
+                      {e.document_date ? ` · ${new Date(e.document_date).toLocaleDateString()}` : ""}
+                      {" · "}
+                      {(e.file_size_bytes / 1024).toFixed(1)} KB
                     </div>
+                    {e.description && (
+                      <div className="mt-0.5 truncate text-xs text-muted-foreground/70">
+                        {e.description}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Badge tone="verified">
+                <div className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
+                  <Badge tone="verified" title={e.sha256_hash}>
                     <IconCheck size={10} />
                     {t("evidence.hashed")}
                   </Badge>
-                  <Badge tone="observation">
-                    <IconLock size={10} />
-                    {t("evidence.encrypted")}
-                  </Badge>
+                  {e.downloadable !== false && (
+                    <a
+                      href={`/api/evidence/${e.id}/download`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-2.5 py-0.5 text-[11px] font-medium text-foreground ring-1 ring-inset ring-border/60 transition-colors hover:border-primary/40 hover:text-primary"
+                    >
+                      <IconDownload size={10} />
+                      {t("evidence.download")}
+                    </a>
+                  )}
                 </div>
               </Card>
             </li>
@@ -329,35 +325,150 @@ function EvidencePane({
   );
 }
 
-function TimelinePane({ items }: { items: any[] }) {
+function TimelinePane({ caseId, items }: { caseId: string; items: any[] }) {
   const t = useTranslations("case");
-  if (items.length === 0) {
-    return (
-      <Card className="p-10 text-center text-sm text-muted-foreground">
-        {t("timeline.empty")}
-      </Card>
-    );
-  }
   return (
-    <ol className="relative space-y-3 border-s border-border/60 ps-6">
-      {items.map((e) => (
-        <li key={e.id} className="relative">
-          <span className="absolute -start-[31px] top-2 grid size-3.5 place-items-center rounded-full bg-card ring-2 ring-primary/30">
-            <span className="size-1.5 rounded-full bg-primary" />
-          </span>
-          <Card className="p-4">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <Badge tone={toneFor(e.classification)}>{e.classification}</Badge>
-              <span>{e.event_date ? new Date(e.event_date).toLocaleDateString() : "—"}</span>
+    <div className="flex flex-col gap-4">
+      <TimelineAddForm caseId={caseId} />
+      {items.length === 0 ? (
+        <Card className="p-10 text-center text-sm text-muted-foreground">
+          {t("timeline.empty")}
+        </Card>
+      ) : (
+        <ol className="relative space-y-3 border-s border-border/60 ps-6">
+          {items.map((e) => (
+            <li key={e.id} className="relative">
+              <span className="absolute -start-[31px] top-2 grid size-3.5 place-items-center rounded-full bg-card ring-2 ring-primary/30">
+                <span className="size-1.5 rounded-full bg-primary" />
+              </span>
+              <Card className="p-4">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <Badge tone={toneFor(e.classification)}>
+                    {t(`timeline.classifications.${e.classification}`)}
+                  </Badge>
+                  <span>
+                    {e.event_date ? new Date(e.event_date).toLocaleDateString() : "—"}
+                  </span>
+                  {e.source_evidence_id && (
+                    <a
+                      href={`/api/evidence/${e.source_evidence_id}/download`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      <IconDownload size={10} />
+                      {t("timeline.evidenceSource")}
+                    </a>
+                  )}
+                </div>
+                <div className="mt-2 text-sm font-medium">{e.title}</div>
+                {e.description && (
+                  <p className="mt-1 text-sm text-muted-foreground">{e.description}</p>
+                )}
+              </Card>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
+
+function TimelineAddForm({ caseId }: { caseId: string }) {
+  const t = useTranslations("case");
+  const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [busy, setBusy] = React.useState(false);
+  const [classification, setClassification] = React.useState("user_fact");
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [eventDate, setEventDate] = React.useState("");
+
+  async function submit() {
+    if (title.trim().length < 2) return;
+    setBusy(true);
+    const fd = new FormData();
+    fd.set("title", title);
+    fd.set("description", description);
+    fd.set("eventDate", eventDate);
+    fd.set("classification", classification);
+    const res = await addTimelineEvent(caseId, fd);
+    setBusy(false);
+    if (res.ok) {
+      toast.success(t("timeline.added"));
+      setTitle("");
+      setDescription("");
+      setEventDate("");
+      setOpen(false);
+      router.refresh();
+    } else {
+      toast.error(res.error === "auth" ? t("timeline.errorAuth") : t("timeline.errorGeneric"));
+    }
+  }
+
+  return (
+    <Card className="p-4">
+      {!open ? (
+        <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setOpen(true)}>
+          <IconPlus size={14} />
+          {t("timeline.add")}
+        </Button>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <div className="text-sm font-medium">{t("timeline.addTitle")}</div>
+          <input
+            autoFocus
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t("timeline.titlePlaceholder")}
+            maxLength={300}
+            className="h-10 w-full rounded-xl border border-input bg-background/60 px-3.5 text-sm shadow-sm focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          />
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t("timeline.descriptionPlaceholder")}
+            maxLength={2000}
+            rows={2}
+            className="min-h-[64px] w-full rounded-xl border border-input bg-background/60 px-3.5 py-2.5 text-sm shadow-sm focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          />
+          <div className="grid gap-3 sm:grid-cols-[200px_1fr]">
+            <input
+              type="date"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              className="h-10 w-full rounded-xl border border-input bg-background/60 px-3.5 text-sm shadow-sm focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            />
+            <div className="flex flex-wrap gap-2">
+              {["user_fact", "user_allegation"].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setClassification(c)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                    classification === c
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border/60 text-muted-foreground hover:border-primary/40",
+                  )}
+                >
+                  {t(`timeline.nature.${c}`)}
+                </button>
+              ))}
             </div>
-            <div className="mt-2 text-sm font-medium">{e.title}</div>
-            {e.description && (
-              <p className="mt-1 text-sm text-muted-foreground">{e.description}</p>
-            )}
-          </Card>
-        </li>
-      ))}
-    </ol>
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>
+              {t("timeline.cancel")}
+            </Button>
+            <Button size="sm" onClick={submit} disabled={busy || title.trim().length < 2} className="gap-1.5">
+              <IconPlus size={14} />
+              {busy ? t("timeline.adding") : t("timeline.submit")}
+            </Button>
+          </div>
+        </div>
+      )}
+    </Card>
   );
 }
 
