@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "name": "LegalShield",
+    "tagline": "Know what you have. Know what still needs to be verified."
+  },
+  "nav": {
+    "howItWorks": "How It Works",
+    "security": "Security",
+    "verificationGuides": "Verification Guides",
+    "lawyerReview": "Lawyer Review",
+    "pricing": "Pricing",
+    "dashboard": "Dashboard",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "hero": {
+    "title": "Know what you have. Know what still needs to be verified.",
+    "subtitle": "Organize your documents, preserve your records, track unanswered requests, and prepare your case for independent professional review.",
+    "ctaPrimary": "Create a case workspace",
+    "ctaSecondary": "How it works"
+  },
+  "boundaries": {
+    "title": "What LegalShield is — and is not",
+    "is": "A secure client evidence and transparency workspace.",
+    "isNot": "Not a law firm. Not legal advice or representation. AI observations are not forensic or legal conclusions."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "activeCases": "Active cases",
+    "needsVerification": "items require verification",
+    "pendingRequests": "Pending requests"
+  },
+  "case": {
+    "new": "New case",
+    "title": "Case title",
+    "jurisdiction": "Jurisdiction",
+    "create": "Create case"
+  },
+  "auth": {
+    "createAccount": "Create account",
+    "checkEmail": "Account created. Check your inbox for the confirmation link, then sign in.",
+    "errors": {
+      "invalid": "That email address was rejected. Use a real email address (e.g. your Gmail).",
+      "rate_limit": "Too many attempts. Wait a few minutes and try again.",
+      "not_confirmed": "Email not confirmed yet. Click the link in your inbox, then sign in.",
+      "failed": "Sign-in failed. Check your email and password and try again."
+    }
+  },
+  "disclaimers": {
+    "aiAnalysis": "This analysis identifies unusual document characteristics. It does not determine authenticity, forgery, fraud, or legal liability. Verify important documents with the issuing authority or a qualified professional.",
+    "correspondence": "This is a client-prepared communication draft, not legal advice. Check the facts carefully and obtain professional advice where appropriate.",
+    "verification": "Procedures can change. Confirm current requirements with the relevant official authority.",
+    "referral": "Lawyers are independent professionals. LegalShield does not guarantee advice, outcomes, or representation."
+  }
+}
