@@ -592,6 +592,7 @@
       "timeline": "Timeline",
       "expenses": "Expenses",
       "requests": "Requests",
+      "prepare": "Prepare",
       "verification": "Verification",
       "export": "Export"
     },
@@ -692,7 +693,69 @@
       "title": "Document requests",
       "subtitle": "Neutral drafts from your facts. Edit before sending.",
       "add": "New request",
-      "empty": "No document requests yet."
+      "empty": "No document requests yet.",
+      "saved": "Draft saved to this case.",
+      "errorAuth": "Your session expired. Sign in again.",
+      "errorGeneric": "Could not save the draft. Try again."
+    },
+    "checklist": {
+      "title": "Case checklist",
+      "subtitle": "A calm, ordered checklist before you write to anyone. Nothing here replaces a lawyer's opinion.",
+      "progress": "{done} of {total} ready",
+      "allReady": "Everything is ready",
+      "auto": "Checks your case automatically",
+      "manual": "Tick when you have done it",
+      "generate": "Generate draft request",
+      "generating": "Preparing draft…",
+      "items": {
+        "summary": {
+          "title": "Summarize what happened",
+          "hint": "2–4 neutral sentences: who, when, what, what you want.",
+          "placeholder": "e.g. I paid for a service on 3 May. The provider delivered it late and incomplete. Emails from May and June show what was promised."
+        },
+        "evidence": {
+          "title": "Save evidence files",
+          "hint": "Upload the documents, receipts and messages you rely on.",
+          "done": "{count} files saved"
+        },
+        "timeline": {
+          "title": "Log key events",
+          "hint": "Add events to the Timeline tab and mark each as fact or belief.",
+          "done": "{count} events logged"
+        },
+        "parties": {
+          "title": "Identify the other party",
+          "hint": "Full name, and any address or reference you know.",
+          "placeholder": "e.g. ABC Contractors, main office, phone number if known."
+        },
+        "request": {
+          "title": "Decide what you are asking for",
+          "hint": "One clear, factual ask you want the recipient to act on.",
+          "placeholder": "e.g. I ask that you confirm the delivery date, refund the late portion, or reply in writing within 14 days."
+        },
+        "review": {
+          "title": "I reviewed the facts before drafting",
+          "hint": "Mark when you have re-read the summary and timeline and they are accurate."
+        }
+      }
+    },
+    "draft": {
+      "title": "Draft request",
+      "subtitle": "A client-prepared factual request. It is not a legal notice and contains no legal citations.",
+      "sectionFacts": "What happened (facts)",
+      "sectionDocs": "Documents collected",
+      "sectionAsk": "What we are requesting",
+      "sectionTo": "To",
+      "preparedBy": "Prepared by the case owner",
+      "statusDraft": "Status: draft",
+      "noFactsNote": "No factual events are logged yet. Add events marked as facts on the Timeline tab, or write the account below yourself.",
+      "templateNote": "Draft template ls-factual-request v0.1. Generated {date}.",
+      "disclaimer": "This is a client-prepared factual request draft, not legal advice. Check the facts carefully and obtain professional advice where appropriate.",
+      "copy": "Copy draft",
+      "copied": "Draft copied.",
+      "save": "Save draft to case",
+      "saving": "Saving…",
+      "printView": "Preview"
     },
     "verification": {
       "title": "Verification",

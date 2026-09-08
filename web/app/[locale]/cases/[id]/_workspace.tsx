@@ -23,6 +23,7 @@ import {
   IconCheck,
   IconLock,
   IconAlert,
+  IconClipboard,
 } from "@/components/ui/icons";
 import { formatRelative } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ import { EvidenceUpload } from "@/components/evidence-upload";
 import { toast } from "sonner";
 import { addTimelineEvent } from "./actions";
 import { buildArchive, downloadArchive } from "@/lib/export/archive";
+import { ChecklistPane } from "@/components/case-checklist";
 
 type CaseRow = {
   id: string;
@@ -47,6 +49,7 @@ const TABS = [
   { key: "timeline", icon: IconClock },
   { key: "expenses", icon: IconWallet },
   { key: "requests", icon: IconSend },
+  { key: "prepare", icon: IconClipboard },
   { key: "verification", icon: IconCompass },
   { key: "export", icon: IconDownload },
 ] as const;
@@ -163,6 +166,14 @@ export function CaseWorkspace({
           {activeTab === "timeline" && <TimelinePane caseId={caseId} items={timeline} />}
           {activeTab === "expenses" && <ExpensesPane items={expenses} />}
           {activeTab === "requests" && <RequestsPane items={requests} />}
+          {activeTab === "prepare" && (
+            <ChecklistPane
+              locale={locale}
+              caseRow={caseRow}
+              evidence={evidence}
+              timeline={timeline}
+            />
+          )}
           {activeTab === "verification" && <VerificationPane />}
           {activeTab === "export" && (
             <ExportPane locale={locale} caseRow={caseRow} evidence={evidence} />

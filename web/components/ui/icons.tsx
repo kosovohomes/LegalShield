@@ -314,3 +314,34 @@ export function IconFingerprint({ size = 18, className, ...props }: IconProps) {
     </svg>
   );
 }
+
+export function IconClipboard({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <rect x="6" y="4" width="12" height="17" rx="2" />
+      <path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
+      <path d="M9 10h6" />
+      <path d="M9 14h6" />
+      <path d="M9 18h4" />
+    </svg>
+  );
+}
+
+export function IconCopy({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
+export function IconSave({ size = 18, className, ...props }: IconProps) {
+  return (
+    <svg {...base(size)} className={cn(className)} {...props}>
+      <path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" />
+      <path d="M8 3v5h7V3" />
+      <path d="M7 21v-7h10v7" />
+    </svg>
+  );
+}
