@@ -8,10 +8,16 @@ import { Button } from "@/components/ui/button";
 import { IconShield, IconMenu, IconX, IconSun, IconMoon } from "@/components/ui/icons";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import type { ChromeLabels } from "@/components/marketing-chrome";
 
-type NavItem = { href: string; label: string };
+export type NavItem = { href: string; label: string };
 
-export function MarketingNav({ items }: { items: NavItem[] }) {
+type NavProps = {
+  items: NavItem[];
+  labels?: ChromeLabels;
+};
+
+export function MarketingNav({ items, labels }: NavProps) {
   const { locale } = useParams<{ locale: string }>();
   const { theme, toggle } = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -27,6 +33,7 @@ export function MarketingNav({ items }: { items: NavItem[] }) {
   return (
     <SafeTranslations
       items={items}
+      labels={labels}
       open={open}
       setOpen={setOpen}
       scrolled={scrolled}
@@ -38,20 +45,21 @@ export function MarketingNav({ items }: { items: NavItem[] }) {
 }
 
 /**
- * Marketing nav uses translations only when an IntlProvider is present.
- * The fallback renders literal labels so it can be safely included in
- * error / not-found routes that sit above the locale provider.
+ * Shared chrome resolves labels through next-intl when they are provided
+ * (locale pages). Without labels — error / not-found routes above the locale
+ * provider — it falls back to the literal English labels passed in `items`
+ * and never calls next-intl hooks.
  */
 function SafeTranslations({
   items,
+  labels,
   open,
   setOpen,
   scrolled,
   theme,
   toggle,
   locale,
-}: {
-  items: NavItem[];
+}: NavProps & {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   scrolled: boolean;
@@ -59,9 +67,11 @@ function SafeTranslations({
   toggle: () => void;
   locale: string | undefined;
 }) {
-  const brand = safeT("brand", "LegalShield");
-  const signIn = safeT("nav.signIn", "Sign in");
-  const cta = safeT("hero.ctaPrimary", "Create a case");
+  const brand = labels?.brand ?? "LegalShield";
+  const signIn = labels?.signIn ?? "Sign in";
+  const cta = labels?.cta ?? "Create a case";
+
+  const labelize = (item: NavItem) => labels?.nav?.[item.href] ?? item.label;
 
   return (
     <motion.header
@@ -93,7 +103,7 @@ function SafeTranslations({
               href={locale ? `/${locale}/${item.href}` : `/${item.href}`}
               className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              {item.label}
+              {labelize(item)}
             </Link>
           ))}
         </nav>
@@ -155,7 +165,7 @@ function SafeTranslations({
                   onClick={() => setOpen(false)}
                   className="rounded-xl px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
-                  {item.label}
+                  {labelize(item)}
                 </Link>
               ))}
               <div className="mt-2 grid grid-cols-2 gap-2">
@@ -176,8 +186,4 @@ function SafeTranslations({
       </AnimatePresence>
     </motion.header>
   );
-}
-
-function safeT(_key: string, fallback: string): string {
-  return fallback;
 }

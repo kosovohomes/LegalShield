@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { MarketingNav } from "@/components/marketing-nav";
-import { SiteFooter } from "@/components/site-footer";
+import { ChromeNav as MarketingNav } from "@/components/marketing-chrome";
+import { ChromeFooter as SiteFooter } from "@/components/marketing-chrome";
 import { PageHero, MarketingShell } from "@/components/marketing-shell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ const NAV = [
   { href: "security", label: "Security" },
   { href: "verification", label: "Verification" },
   { href: "lawyer-review", label: "Lawyer review" },
+  { href: "rights", label: "Client rights" },
   { href: "pricing", label: "Pricing" },
   { href: "about", label: "About" },
 ];

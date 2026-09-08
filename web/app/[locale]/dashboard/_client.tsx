@@ -16,6 +16,7 @@ import {
   IconAlert,
   IconArrowRight,
   IconSparkles,
+  IconBook,
 } from "@/components/ui/icons";
 import { Stagger, StaggerItem, FadeIn } from "@/components/motion-primitives";
 import { formatRelative } from "@/lib/format";
@@ -178,6 +179,12 @@ export function DashboardClient({
               icon={<IconSend size={16} />}
               label={t("actionsList.request")}
               hint="A neutral draft from your facts."
+            />
+            <ActionCard
+              href={`/${locale}/rights`}
+              icon={<IconBook size={16} />}
+              label={t("actionsList.rights")}
+              hint="Your rights, attorney duties, draft letters — KW & JO."
             />
           </div>
 

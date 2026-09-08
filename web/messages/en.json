@@ -8,6 +8,7 @@
     "security": "Security",
     "verificationGuides": "Verification",
     "lawyerReview": "Lawyer review",
+    "rights": "Client rights",
     "pricing": "Pricing",
     "about": "About",
     "contact": "Contact",
@@ -297,9 +298,10 @@
     },
     "actions": "Quick actions",
     "actionsList": {
-      "upload": "Upload evidence",
-      "newCase": "Start a new case",
-      "request": "Draft a neutral request"
+"upload": "Upload evidence",
+  "newCase": "Start a new case",
+  "request": "Draft a neutral request",
+  "rights": "Know your rights"
     }
   },
   "casesList": {
@@ -556,6 +558,40 @@
     "errorTitle": "Please add a short name for the case (at least 2 characters).",
     "errorAuth": "Your session expired. Please sign in again.",
     "errorGeneric": "Something went wrong. Please try again."
+  },
+  "rights": {
+    "eyebrow": "Client rights & lawyer accountability",
+    "title": "Know your rights as a client",
+    "subtitle": "What you are entitled to from a lawyer, what the profession requires of them, and the practical steps and resources that exist in Kuwait and Jordan if things go wrong — in plain language, with draft letters you can edit.",
+    "nav": "Client rights",
+    "contents": "On this page",
+    "sections": {
+      "rights": "Your rights",
+      "duties": "What a lawyer must do",
+      "courses": "Misconduct vs malpractice",
+      "evidence": "Gather before you act",
+      "actions": "Actions & resources",
+      "templates": "Draft letters",
+      "resources": "Official bodies",
+      "verify": "Before you act"
+    },
+    "source": "Source",
+    "verify": "Verify with the official source",
+    "officialBody": "Official body",
+    "bestFor": "Best for",
+    "evidenceLabel": "What you will need",
+    "stepsLabel": "How to proceed",
+    "parallel": "Runs alongside",
+    "note": "Points to remember",
+    "draft": "Draft",
+    "copy": "Copy",
+    "copied": "Copied",
+    "reset": "Reset",
+    "placeholders": "Fill in the {N} placeholder field(s) before sending",
+    "snapshot": "Educational snapshot",
+    "notAdviceTitle": "Not legal advice",
+    "notAdviceBody": "This page explains rights and duties in general terms so you can act with confidence. It is not legal advice, it does not create a lawyer–client relationship, and it cannot tell you the right choice for your situation. If a dispute with a lawyer affects you, take independent legal advice on your own facts.",
+    "ctaLabel": "Organize your case"
   },
   "errors": {
     "notFound": {
