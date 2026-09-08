@@ -16,3 +16,24 @@ export function formatRelative(iso: string, locale: string): string {
     day: "numeric",
   });
 }
+
+/** Locale-aware absolute date (used in reports and archives). */
+export function formatDate(iso: string | null | undefined, locale: string): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+/** Human-friendly file size. */
+export function formatBytes(bytes: number | null | undefined): string {
+  if (!bytes || bytes <= 0) return "—";
+  const units = ["B", "KB", "MB", "GB"];
+  const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+  const value = bytes / 1024 ** i;
+  return `${value.toFixed(value >= 100 || i === 0 ? 0 : 1)} ${units[i]}`;
+}

@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { EvidenceUpload } from "@/components/evidence-upload";
 import { toast } from "sonner";
 import { addTimelineEvent } from "./actions";
+import { buildArchive, downloadArchive } from "@/lib/export/archive";
 
 type CaseRow = {
   id: string;
@@ -163,7 +164,9 @@ export function CaseWorkspace({
           {activeTab === "expenses" && <ExpensesPane items={expenses} />}
           {activeTab === "requests" && <RequestsPane items={requests} />}
           {activeTab === "verification" && <VerificationPane />}
-          {activeTab === "export" && <ExportPane />}
+          {activeTab === "export" && (
+            <ExportPane locale={locale} caseRow={caseRow} evidence={evidence} />
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
@@ -572,26 +575,114 @@ function VerificationPane() {
   );
 }
 
-function ExportPane() {
+function ExportPane({
+  locale,
+  caseRow,
+  evidence,
+}: {
+  locale: string;
+  caseRow: CaseRow;
+  evidence: any[];
+}) {
+  const t = useTranslations("case.export");
+  const [busy, setBusy] = React.useState<"zip" | "review" | null>(null);
+  const [progress, setProgress] = React.useState<{ done: number; total: number } | null>(null);
+
+  async function runArchive(kind: "zip" | "review") {
+    if (evidence.length === 0) {
+      toast.error(t("zipEmpty"));
+      return;
+    }
+    setBusy(kind);
+    setProgress(null);
+    try {
+      const result = await buildArchive({
+        caseRow,
+        evidence,
+        kind: kind === "review" ? "lawyer" : "evidence",
+        locale,
+        onProgress: (done, total) => setProgress({ done, total }),
+        onSkipped: (name) => toast.info(t("zipMissing", { name })),
+      });
+      downloadArchive(result);
+      toast.success(t("zipDone"));
+    } catch {
+      toast.error(t("zipFailed"));
+    } finally {
+      setBusy(null);
+      setProgress(null);
+    }
+  }
+
+  const cards = [
+    {
+      key: "pdf",
+      title: t("pdf"),
+      body: t("pdfDesc"),
+      hint: t("pdfHint"),
+      icon: IconBook,
+      action: (
+        <Button variant="outline" size="sm" className="mt-4 w-full gap-1.5" asChild>
+          <Link href={`/${locale}/cases/${caseRow.id}/report`} target="_blank">
+            <IconBook size={12} />
+            {t("pdfOpen")}
+          </Link>
+        </Button>
+      ),
+    },
+    {
+      key: "zip",
+      title: t("zip"),
+      body: t("zipDesc"),
+      hint: `${evidence.length} files`,
+      icon: IconDownload,
+      action: (
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-4 w-full gap-1.5"
+          disabled={busy !== null || evidence.length === 0}
+          onClick={() => runArchive("zip")}
+        >
+          <IconDownload size={12} />
+          {busy === "zip" && progress ? t("zipProgress", { done: progress.done, total: progress.total }) : busy === "zip" ? t("downloading") : t("zipGenerate")}
+        </Button>
+      ),
+    },
+    {
+      key: "review",
+      title: t("review"),
+      body: t("reviewDesc"),
+      hint: t("reviewHint"),
+      icon: IconSend,
+      action: (
+        <Button
+          variant="default"
+          size="sm"
+          className="mt-4 w-full gap-1.5"
+          disabled={busy !== null || evidence.length === 0}
+          onClick={() => runArchive("review")}
+        >
+          <IconSend size={12} />
+          {busy === "review" && progress ? t("zipProgress", { done: progress.done, total: progress.total }) : busy === "review" ? t("downloading") : t("zipGenerate")}
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <div className="grid gap-3 md:grid-cols-3">
-      {[
-        { title: "Human-readable PDF", body: "Case summary, timeline, evidence index, expense summary.", icon: IconBook },
-        { title: "Evidence archive (ZIP)", body: "Originals + manifest with hashes for integrity.", icon: IconDownload },
-        { title: "Lawyer review package", body: "Everything an independent lawyer needs in one bundle.", icon: IconSend },
-      ].map((c) => {
+      {cards.map((c) => {
         const Icon = c.icon;
         return (
-          <Card key={c.title} className="p-5">
+          <Card key={c.key} className="p-5">
             <div className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
               <Icon size={16} />
             </div>
             <h3 className="mt-3 text-sm font-semibold">{c.title}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{c.body}</p>
-            <Button variant="outline" size="sm" className="mt-4 w-full gap-1.5">
-              <IconDownload size={12} />
-              Generate
-            </Button>
+            <p className="mt-1.5 text-xs text-foreground/50">{c.hint}</p>
+            {c.action}
           </Card>
         );
       })}

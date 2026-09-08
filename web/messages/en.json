@@ -61,12 +61,60 @@
     "subtitle": "Every step preserves what you actually have, flags what is missing, and never quietly turns a hypothesis into a conclusion.",
     "caveat": "LegalShield surfaces and organizes facts — it does not make legal arguments on your behalf. Lawyer review is always a separate, optional step.",
     "steps": {
-      "evidence": { "title": "Preserve evidence", "body": "Encrypted on your device before upload. Originals are never modified by AI.", "points": ["Client-side encryption with a recovery key", "SHA-256 hash for every file", "Activity history you control"] },
-      "timeline": { "title": "Build a timeline", "body": "Turn scattered events into a chronological record you can scan.", "points": ["Fact vs allegation vs observation", "Conflicts flagged, never concluded", "Filter by source and date"] },
-      "expenses": { "title": "Reconcile expenses", "body": "Match claims to receipts and bank records. See what is supported and what is not.", "points": ["Per-row reconciliation table", "No fraud verdicts — only statuses", "Export-ready ledger"] },
-      "requests": { "title": "Send a neutral request", "body": "Editable drafts based on your facts. No invented citations, no threats.", "points": ["Editable output, always", "Citations only from versioned templates", "Manual delivery via your own channels"] },
-      "verification": { "title": "Verify independently", "body": "Source-versioned guides to official channels — never hard-coded fees.", "points": ["Jurisdiction-aware (KW, JO)", "Source and last-verified date", "Refusal workflow built in"] },
-      "professional": { "title": "Request professional review", "body": "Package the case for a licensed lawyer with one click.", "points": ["Independent Lawyer Review Package", "License / status verified, not \"vetted\"", "You stay in control of what is shared"] }
+      "evidence": {
+        "title": "Preserve evidence",
+        "body": "Encrypted on your device before upload. Originals are never modified by AI.",
+        "points": [
+          "Client-side encryption with a recovery key",
+          "SHA-256 hash for every file",
+          "Activity history you control"
+        ]
+      },
+      "timeline": {
+        "title": "Build a timeline",
+        "body": "Turn scattered events into a chronological record you can scan.",
+        "points": [
+          "Fact vs allegation vs observation",
+          "Conflicts flagged, never concluded",
+          "Filter by source and date"
+        ]
+      },
+      "expenses": {
+        "title": "Reconcile expenses",
+        "body": "Match claims to receipts and bank records. See what is supported and what is not.",
+        "points": [
+          "Per-row reconciliation table",
+          "No fraud verdicts — only statuses",
+          "Export-ready ledger"
+        ]
+      },
+      "requests": {
+        "title": "Send a neutral request",
+        "body": "Editable drafts based on your facts. No invented citations, no threats.",
+        "points": [
+          "Editable output, always",
+          "Citations only from versioned templates",
+          "Manual delivery via your own channels"
+        ]
+      },
+      "verification": {
+        "title": "Verify independently",
+        "body": "Source-versioned guides to official channels — never hard-coded fees.",
+        "points": [
+          "Jurisdiction-aware (KW, JO)",
+          "Source and last-verified date",
+          "Refusal workflow built in"
+        ]
+      },
+      "professional": {
+        "title": "Request professional review",
+        "body": "Package the case for a licensed lawyer with one click.",
+        "points": [
+          "Independent Lawyer Review Package",
+          "License / status verified, not \"vetted\"",
+          "You stay in control of what is shared"
+        ]
+      }
     }
   },
   "security": {
@@ -75,21 +123,48 @@
     "subtitle": "Our public copy matches our technical behavior — no military-grade marketing, no zero-knowledge hand-waving.",
     "cta": "Read the security details",
     "promise": {
-      "cse": { "title": "Client-side encryption", "body": "Files are encrypted on your device before upload. The server stores ciphertext only." },
-      "noForge": { "title": "AI never declares forgery", "body": "AI surfaces unusual characteristics. It never labels a document as fake or fraudulent." },
-      "noVerdict": { "title": "No lawyer verdicts", "body": "We help you organize. A licensed professional gives opinions. We don't blur that line." },
-      "export": { "title": "Export anytime", "body": "Your data is yours. Download a complete evidence package whenever you want." },
-      "delete": { "title": "Delete on request", "body": "Account and case deletion with optional export. Configurable retention." }
+      "cse": {
+        "title": "Client-side encryption",
+        "body": "Files are encrypted on your device before upload. The server stores ciphertext only."
+      },
+      "noForge": {
+        "title": "AI never declares forgery",
+        "body": "AI surfaces unusual characteristics. It never labels a document as fake or fraudulent."
+      },
+      "noVerdict": {
+        "title": "No lawyer verdicts",
+        "body": "We help you organize. A licensed professional gives opinions. We don't blur that line."
+      },
+      "export": {
+        "title": "Export anytime",
+        "body": "Your data is yours. Download a complete evidence package whenever you want."
+      },
+      "delete": {
+        "title": "Delete on request",
+        "body": "Account and case deletion with optional export. Configurable retention."
+      }
     },
     "model": {
       "eyebrow": "Encryption model",
       "title": "Envelope encryption, by design",
       "subtitle": "Every file is encrypted on the client. The server sees ciphertext and metadata — not the document.",
       "items": [
-        { "label": "Per-file key", "body": "A fresh AES-256-GCM data key protects each file." },
-        { "label": "Key wrapping", "body": "Per-file keys are wrapped with a key hierarchy derived from your password and a recovery key." },
-        { "label": "Server storage", "body": "Only encrypted bytes and wrapped key material are stored. Plaintext never leaves your device." },
-        { "label": "Hashing", "body": "SHA-256 of plaintext is computed before encryption for integrity." }
+        {
+          "label": "Per-file key",
+          "body": "A fresh AES-256-GCM data key protects each file."
+        },
+        {
+          "label": "Key wrapping",
+          "body": "Per-file keys are wrapped with a key hierarchy derived from your password and a recovery key."
+        },
+        {
+          "label": "Server storage",
+          "body": "Only encrypted bytes and wrapped key material are stored. Plaintext never leaves your device."
+        },
+        {
+          "label": "Hashing",
+          "body": "SHA-256 of plaintext is computed before encryption for integrity."
+        }
       ]
     },
     "boundaries": {
@@ -106,12 +181,30 @@
     "title": "A workflow designed to be honest",
     "intro": "Every step is built so the system can never quietly turn your uncertainty into a conclusion. AI observations are labeled. Facts and allegations are visually separated. Lawyer review is a separate, optional step.",
     "stages": [
-      { "title": "Set up your workspace", "body": "Create an account, choose your default language and jurisdiction, and you're ready." },
-      { "title": "Preserve what you have", "body": "Upload evidence. Each file is hashed and encrypted on your device. The original is never modified." },
-      { "title": "Organize by meaning", "body": "Build a timeline, mark facts vs allegations, attach evidence to each event." },
-      { "title": "Reconcile and request", "body": "Match claims to receipts, then draft a neutral request to your lawyer for the missing pieces." },
-      { "title": "Verify and decide", "body": "Use official-channel guides to verify what you can. Decide what's still uncertain." },
-      { "title": "Request professional review", "body": "Generate a Lawyer Review Package and send it to an independent lawyer." }
+      {
+        "title": "Set up your workspace",
+        "body": "Create an account, choose your default language and jurisdiction, and you're ready."
+      },
+      {
+        "title": "Preserve what you have",
+        "body": "Upload evidence. Each file is hashed and encrypted on your device. The original is never modified."
+      },
+      {
+        "title": "Organize by meaning",
+        "body": "Build a timeline, mark facts vs allegations, attach evidence to each event."
+      },
+      {
+        "title": "Reconcile and request",
+        "body": "Match claims to receipts, then draft a neutral request to your lawyer for the missing pieces."
+      },
+      {
+        "title": "Verify and decide",
+        "body": "Use official-channel guides to verify what you can. Decide what's still uncertain."
+      },
+      {
+        "title": "Request professional review",
+        "body": "Generate a Lawyer Review Package and send it to an independent lawyer."
+      }
     ]
   },
   "verification": {
@@ -122,18 +215,49 @@
     "noGuarantee": "Access depends on the authority's current procedures and your legal status in the matter.",
     "refusal": {
       "title": "If access is refused",
-      "steps": ["Do not argue.", "Ask whether there is an official alternative process.", "Record the date and office visited.", "Record what information was requested.", "Keep any written response.", "Consult a licensed lawyer where necessary."]
+      "steps": [
+        "Do not argue.",
+        "Ask whether there is an official alternative process.",
+        "Record the date and office visited.",
+        "Record what information was requested.",
+        "Keep any written response.",
+        "Consult a licensed lawyer where necessary."
+      ]
     },
     "guides": {
       "KW": [
-        { "title": "Ministry of Justice — case status lookup", "authority": "Ministry of Justice, Kuwait", "verified": "Reviewed by legal team" },
-        { "title": "Court of First Instance — hearing schedule", "authority": "Court of First Instance", "verified": "Pending review" },
-        { "title": "Court of Appeals — filing receipts", "authority": "Court of Appeals", "verified": "Reviewed by legal team" }
+        {
+          "title": "Ministry of Justice — case status lookup",
+          "authority": "Ministry of Justice, Kuwait",
+          "verified": "Reviewed by legal team"
+        },
+        {
+          "title": "Court of First Instance — hearing schedule",
+          "authority": "Court of First Instance",
+          "verified": "Pending review"
+        },
+        {
+          "title": "Court of Appeals — filing receipts",
+          "authority": "Court of Appeals",
+          "verified": "Reviewed by legal team"
+        }
       ],
       "JO": [
-        { "title": "Ministry of Justice — case status lookup", "authority": "Ministry of Justice, Jordan", "verified": "Pending review" },
-        { "title": "Magistrate courts — filing receipts", "authority": "Magistrate courts", "verified": "Pending review" },
-        { "title": "Court of Cassation — appeal status", "authority": "Court of Cassation", "verified": "Pending review" }
+        {
+          "title": "Ministry of Justice — case status lookup",
+          "authority": "Ministry of Justice, Jordan",
+          "verified": "Pending review"
+        },
+        {
+          "title": "Magistrate courts — filing receipts",
+          "authority": "Magistrate courts",
+          "verified": "Pending review"
+        },
+        {
+          "title": "Court of Cassation — appeal status",
+          "authority": "Court of Cassation",
+          "verified": "Pending review"
+        }
       ]
     }
   },
@@ -143,7 +267,20 @@
     "subtitle": "We don't pick your lawyer. We help you assemble a clean, well-labeled package so a real lawyer can review it faster.",
     "package": {
       "title": "What's in the package",
-      "items": ["Case summary", "User-provided facts", "Timeline of events", "Evidence index", "Expense ledger", "Correspondence index", "Unresolved questions", "Document anomalies", "Verification results", "User allegations clearly labeled", "AI-generated content clearly labeled", "Original files or secure references"]
+      "items": [
+        "Case summary",
+        "User-provided facts",
+        "Timeline of events",
+        "Evidence index",
+        "Expense ledger",
+        "Correspondence index",
+        "Unresolved questions",
+        "Document anomalies",
+        "Verification results",
+        "User allegations clearly labeled",
+        "AI-generated content clearly labeled",
+        "Original files or secure references"
+      ]
     },
     "vetting": {
       "title": "How lawyers are listed",
@@ -157,7 +294,12 @@
     },
     "noPromises": {
       "title": "What we never promise",
-      "items": ["\"Best lawyer.\"", "Guaranteed outcomes.", "Recoveries of any amount.", "Beating your previous lawyer."]
+      "items": [
+        "\"Best lawyer.\"",
+        "Guaranteed outcomes.",
+        "Recoveries of any amount.",
+        "Beating your previous lawyer."
+      ]
     }
   },
   "pricing": {
@@ -165,9 +307,50 @@
     "title": "Honest plans, jurisdiction-aware",
     "subtitle": "No commission on recoveries. No hidden percentages. Lawyer referrals are subject to local regulatory review.",
     "tiers": [
-      { "name": "Free", "price": "0", "currency": "KWD/JOD", "period": "per month", "tagline": "Start organizing your case today.", "features": ["1 active case", "Up to 25 encrypted items", "Basic timeline & expense ledger", "One PDF export"], "cta": "Get started" },
-      { "name": "Case Pack", "price": "29", "currency": "KWD/JOD", "period": "one-time", "tagline": "For a focused matter.", "features": ["Unlimited cases for 12 months", "Unlimited encrypted evidence", "AI extraction (subject to fair use)", "Document anomaly observations", "ZIP + PDF + Review Package exports"], "cta": "Buy Case Pack", "highlight": true },
-      { "name": "Lawyer Consultation", "price": "—", "currency": "", "period": "set by lawyer", "tagline": "You pay the lawyer directly.", "features": ["Independent review", "Set by each lawyer", "Booking after regulatory review", "Receipts exported to your case"], "cta": "Browse lawyers" }
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "KWD/JOD",
+        "period": "per month",
+        "tagline": "Start organizing your case today.",
+        "features": [
+          "1 active case",
+          "Up to 25 encrypted items",
+          "Basic timeline & expense ledger",
+          "One PDF export"
+        ],
+        "cta": "Get started"
+      },
+      {
+        "name": "Case Pack",
+        "price": "29",
+        "currency": "KWD/JOD",
+        "period": "one-time",
+        "tagline": "For a focused matter.",
+        "features": [
+          "Unlimited cases for 12 months",
+          "Unlimited encrypted evidence",
+          "AI extraction (subject to fair use)",
+          "Document anomaly observations",
+          "ZIP + PDF + Review Package exports"
+        ],
+        "cta": "Buy Case Pack",
+        "highlight": true
+      },
+      {
+        "name": "Lawyer Consultation",
+        "price": "—",
+        "currency": "",
+        "period": "set by lawyer",
+        "tagline": "You pay the lawyer directly.",
+        "features": [
+          "Independent review",
+          "Set by each lawyer",
+          "Booking after regulatory review",
+          "Receipts exported to your case"
+        ],
+        "cta": "Browse lawyers"
+      }
     ],
     "noCommission": "Referral commissions, fee splitting, contingency arrangements, and advertising practices are reviewed and approved for each jurisdiction before launch. We do not charge a percentage of any recovery."
   },
@@ -176,11 +359,26 @@
     "title": "We build software for clients, not against lawyers",
     "intro": "LegalShield was started because too many people feel they have lost the thread of their own case — not because the law failed them, but because the information around it scattered. We help clients organize, preserve, and decide what to verify. We don't replace a lawyer. We make the work between you and a lawyer calmer, clearer, and more honest.",
     "values": [
-      { "title": "Client-first", "body": "The primary workspace belongs to the client, not the platform." },
-      { "title": "Evidence-first", "body": "Preserve originals and record integrity information before any analysis." },
-      { "title": "Factual language", "body": "Facts, allegations, observations, AI findings, and professional conclusions stay separate." },
-      { "title": "Reversibility", "body": "Users can export their data and close their account at any time." },
-      { "title": "Neutrality", "body": "We do not encourage harassment, threats, public accusations, or retaliation." }
+      {
+        "title": "Client-first",
+        "body": "The primary workspace belongs to the client, not the platform."
+      },
+      {
+        "title": "Evidence-first",
+        "body": "Preserve originals and record integrity information before any analysis."
+      },
+      {
+        "title": "Factual language",
+        "body": "Facts, allegations, observations, AI findings, and professional conclusions stay separate."
+      },
+      {
+        "title": "Reversibility",
+        "body": "Users can export their data and close their account at any time."
+      },
+      {
+        "title": "Neutrality",
+        "body": "We do not encourage harassment, threats, public accusations, or retaliation."
+      }
     ]
   },
   "contact": {
@@ -188,14 +386,37 @@
     "title": "Get in touch",
     "subtitle": "We respond to support, privacy, and security inquiries.",
     "channels": [
-      { "label": "General support", "value": "support@legalshield.app", "hint": "Account, billing, product questions" },
-      { "label": "Security", "value": "security@legalshield.app", "hint": "Report a vulnerability" },
-      { "label": "Privacy", "value": "privacy@legalshield.app", "hint": "Data requests, deletion, export" }
+      {
+        "label": "General support",
+        "value": "support@legalshield.app",
+        "hint": "Account, billing, product questions"
+      },
+      {
+        "label": "Security",
+        "value": "security@legalshield.app",
+        "hint": "Report a vulnerability"
+      },
+      {
+        "label": "Privacy",
+        "value": "privacy@legalshield.app",
+        "hint": "Data requests, deletion, export"
+      }
     ],
     "formTitle": "Send us a message",
     "formSubtitle": "We read every message. We do not use it for marketing.",
-    "fields": { "name": "Your name", "email": "Email", "topic": "Topic", "message": "Message" },
-    "topics": ["General support", "Security", "Privacy", "Press", "Other"],
+    "fields": {
+      "name": "Your name",
+      "email": "Email",
+      "topic": "Topic",
+      "message": "Message"
+    },
+    "topics": [
+      "General support",
+      "Security",
+      "Privacy",
+      "Press",
+      "Other"
+    ],
     "submit": "Send",
     "submitted": "Thanks — we'll get back to you."
   },
@@ -206,11 +427,26 @@
       "lastUpdated": "Last updated",
       "intro": "This page is a product specification. The legally binding text is the Privacy Policy in your account settings and on file with our counsel. The plan is described below.",
       "sections": [
-        { "heading": "What we collect", "body": "Account information (email, hashed password), profile preferences (language, default jurisdiction), case data you create, evidence files (encrypted on your device), and technical metadata (timestamps, IP addresses for security only)." },
-        { "heading": "What we do not collect", "body": "We do not collect your plaintext evidence. We do not build advertising profiles. We do not sell your data." },
-        { "heading": "Processors", "body": "We use Supabase for authentication, database, and storage; a transactional email provider for notifications; an AI provider for OCR/extraction. Each is bound by a data-processing agreement and listed here." },
-        { "heading": "Your rights", "body": "You can export your full data, request deletion, or correct your profile. Email privacy@legalshield.app." },
-        { "heading": "Retention", "body": "Default retention is as long as your account is active. You can set a per-case retention period or delete any case at any time." }
+        {
+          "heading": "What we collect",
+          "body": "Account information (email, hashed password), profile preferences (language, default jurisdiction), case data you create, evidence files (encrypted on your device), and technical metadata (timestamps, IP addresses for security only)."
+        },
+        {
+          "heading": "What we do not collect",
+          "body": "We do not collect your plaintext evidence. We do not build advertising profiles. We do not sell your data."
+        },
+        {
+          "heading": "Processors",
+          "body": "We use Supabase for authentication, database, and storage; a transactional email provider for notifications; an AI provider for OCR/extraction. Each is bound by a data-processing agreement and listed here."
+        },
+        {
+          "heading": "Your rights",
+          "body": "You can export your full data, request deletion, or correct your profile. Email privacy@legalshield.app."
+        },
+        {
+          "heading": "Retention",
+          "body": "Default retention is as long as your account is active. You can set a per-case retention period or delete any case at any time."
+        }
       ]
     },
     "terms": {
@@ -219,12 +455,30 @@
       "lastUpdated": "Last updated",
       "intro": "This is a product specification. The legally binding Terms will be reviewed by qualified counsel in Kuwait and Jordan before launch.",
       "sections": [
-        { "heading": "Not a law firm", "body": "LegalShield provides organizational, informational, and technology services. It does not provide legal advice or representation, and use of the platform does not create an attorney-client relationship." },
-        { "heading": "User responsibility", "body": "You are responsible for the accuracy of information you submit and for decisions you make based on platform outputs." },
-        { "heading": "AI limitation", "body": "AI outputs may contain errors and must be independently verified." },
-        { "heading": "No authenticity determination", "body": "An AI anomaly report is not a forensic certification." },
-        { "heading": "No outcome guarantee", "body": "LegalShield does not guarantee a response, recovery, court result, professional outcome, or acceptance of any document." },
-        { "heading": "Third-party lawyers", "body": "Independent lawyers are responsible for their own professional services." }
+        {
+          "heading": "Not a law firm",
+          "body": "LegalShield provides organizational, informational, and technology services. It does not provide legal advice or representation, and use of the platform does not create an attorney-client relationship."
+        },
+        {
+          "heading": "User responsibility",
+          "body": "You are responsible for the accuracy of information you submit and for decisions you make based on platform outputs."
+        },
+        {
+          "heading": "AI limitation",
+          "body": "AI outputs may contain errors and must be independently verified."
+        },
+        {
+          "heading": "No authenticity determination",
+          "body": "An AI anomaly report is not a forensic certification."
+        },
+        {
+          "heading": "No outcome guarantee",
+          "body": "LegalShield does not guarantee a response, recovery, court result, professional outcome, or acceptance of any document."
+        },
+        {
+          "heading": "Third-party lawyers",
+          "body": "Independent lawyers are responsible for their own professional services."
+        }
       ]
     }
   },
@@ -298,10 +552,10 @@
     },
     "actions": "Quick actions",
     "actionsList": {
-"upload": "Upload evidence",
-  "newCase": "Start a new case",
-  "request": "Draft a neutral request",
-  "rights": "Know your rights"
+      "upload": "Upload evidence",
+      "newCase": "Start a new case",
+      "request": "Draft a neutral request",
+      "rights": "Know your rights"
     }
   },
   "casesList": {
@@ -314,7 +568,14 @@
       "body": "Start with one case. You can add more anytime.",
       "cta": "Create a case"
     },
-    "filter": { "all": "All", "active": "Active", "monitoring": "Monitoring", "resolved": "Resolved", "closed": "Closed", "archived": "Archived" }
+    "filter": {
+      "all": "All",
+      "active": "Active",
+      "monitoring": "Monitoring",
+      "resolved": "Resolved",
+      "closed": "Closed",
+      "archived": "Archived"
+    }
   },
   "case": {
     "new": "New case",
@@ -334,7 +595,11 @@
       "verification": "Verification",
       "export": "Export"
     },
-    "overview": { "summary": "Case summary", "meta": "Metadata", "stats": "Case health" },
+    "overview": {
+      "summary": "Case summary",
+      "meta": "Metadata",
+      "stats": "Case health"
+    },
     "evidence": {
       "title": "Evidence vault",
       "subtitle": "Upload files. We hash and encrypt them. Originals are never modified.",
@@ -352,7 +617,10 @@
       "uploadAll": "Protect all",
       "remaining": "{count} waiting",
       "download": "Download",
-      "fileState": { "hashing": "Hashing…", "uploading": "Uploading…" },
+      "fileState": {
+        "hashing": "Hashing…",
+        "uploading": "Uploading…"
+      },
       "uploaded": "{name} is now protected",
       "errorAuth": "Your session expired. Sign in again.",
       "errorSize": "File too large — 50 MB max.",
@@ -420,9 +688,79 @@
         "professional_review_required": "Review required"
       }
     },
-    "requests": { "title": "Document requests", "subtitle": "Neutral drafts from your facts. Edit before sending.", "add": "New request", "empty": "No document requests yet." },
-    "verification": { "title": "Verification", "subtitle": "Independent checks against official channels. Sources are versioned.", "empty": "No verification tasks yet." },
-    "export": { "title": "Export", "subtitle": "Take your data with you. Manifest included for integrity.", "pdf": "Human-readable PDF", "zip": "Evidence archive (ZIP)", "review": "Lawyer review package" }
+    "requests": {
+      "title": "Document requests",
+      "subtitle": "Neutral drafts from your facts. Edit before sending.",
+      "add": "New request",
+      "empty": "No document requests yet."
+    },
+    "verification": {
+      "title": "Verification",
+      "subtitle": "Independent checks against official channels. Sources are versioned.",
+      "empty": "No verification tasks yet."
+    },
+    "export": {
+      "title": "Export",
+      "subtitle": "Take your data with you. Manifest included for integrity.",
+      "pdf": "Human-readable PDF",
+      "zip": "Evidence archive (ZIP)",
+      "review": "Lawyer review package",
+      "pdfDesc": "Case summary, timeline, evidence index and expense summary in one clean report.",
+      "pdfHint": "Opens a print view - save as PDF from your browser.",
+      "pdfOpen": "Open printable report",
+      "zipDesc": "Original files plus a JSON manifest with SHA-256 hashes for integrity.",
+      "zipGenerate": "Build archive",
+      "zipProgress": "Packaging {done} of {total}...",
+      "zipDone": "Archive ready - download started.",
+      "zipFailed": "Export failed. Try again.",
+      "zipEmpty": "Add evidence before exporting an archive.",
+      "zipMissing": "{name} could not be downloaded and was skipped.",
+      "reviewDesc": "Archive plus a plain-text brief written for an independent professional review.",
+      "reviewHint": "Includes evidence, manifest, case summary, and a lawyer brief.",
+      "downloading": "Starting download..."
+    },
+    "report": {
+      "meta": "Case report",
+      "subtitle": "Prepared for your records. Includes a not-legal-advice disclaimer.",
+      "generatedAt": "Generated {date}",
+      "print": "Print / Save as PDF",
+      "back": "Back to case",
+      "disclaimer": "This document is an observational summary prepared from your case file. It is not legal advice, and it does not replace the opinion of a qualified lawyer. Any AI output is observational only.",
+      "sections": {
+        "caseSummary": "Case summary",
+        "meta": "Case details",
+        "timeline": "Timeline",
+        "evidence": "Evidence index",
+        "expenses": "Expenses",
+        "requests": "Document requests"
+      },
+      "empty": {
+        "timeline": "No timeline events recorded yet.",
+        "evidence": "No evidence uploaded yet.",
+        "expenses": "No expenses recorded yet.",
+        "requests": "No document requests yet."
+      },
+      "field": {
+        "jurisdiction": "Jurisdiction",
+        "status": "Status",
+        "createdOn": "Created on",
+        "updatedOn": "Updated on",
+        "description": "Description",
+        "date": "Date",
+        "title": "Title",
+        "classification": "Type",
+        "filename": "File",
+        "mime": "Type",
+        "size": "Size",
+        "sha256": "SHA-256",
+        "category": "Category",
+        "uploadedOn": "Uploaded on",
+        "amount": "Amount",
+        "claim": "Claimed purpose",
+        "payee": "Payee",
+        "type": "Type"
+      }
+    }
   },
   "settings": {
     "title": "Settings",
@@ -462,7 +800,11 @@
       "retention": "Default retention",
       "retentionHint": "How long we keep data after you delete a case or close your account."
     },
-    "support": { "title": "Need help?", "body": "Reach the team for product, security, or privacy questions.", "cta": "Contact support" }
+    "support": {
+      "title": "Need help?",
+      "body": "Reach the team for product, security, or privacy questions.",
+      "cta": "Contact support"
+    }
   },
   "delete": {
     "title": "Delete account",
@@ -482,9 +824,18 @@
     "title": "Support",
     "subtitle": "We're here for product, security, and privacy questions.",
     "channels": [
-      { "label": "General", "value": "support@legalshield.app" },
-      { "label": "Security", "value": "security@legalshield.app" },
-      { "label": "Privacy", "value": "privacy@legalshield.app" }
+      {
+        "label": "General",
+        "value": "support@legalshield.app"
+      },
+      {
+        "label": "Security",
+        "value": "security@legalshield.app"
+      },
+      {
+        "label": "Privacy",
+        "value": "privacy@legalshield.app"
+      }
     ],
     "status": "System status",
     "statusOk": "All systems operational",
